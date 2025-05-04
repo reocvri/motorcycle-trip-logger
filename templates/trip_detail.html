@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+<head>
+  <title>{{ trip[1] }}</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>#map { height: 400px; }</style>
+</head>
+<body>
+<h1>{{ trip[1] }}</h1>
+<h3>{{ trip[2] }}</h3>
+<p>{{ trip[3] }}</p>
+<h4>Total Distance: {{ distance }} km</h4>
+
+<div id="map"></div>
+
+<ul>
+{% for p in points %}
+    <li>{{ p[2] }}, {{ p[3] }} — {{ p[4] }}</li>
+{% endfor %}
+</ul>
+
+<form action="/trip/{{ trip[0] }}/add_point" method="post">
+    <input name="coords" placeholder="lat, lon" required>
+    <input name="note" placeholder="Note">
+    <button type="submit">Add Location</button>
+</form>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+  var map = L.map('map').setView([0,0], 2);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18
+  }).addTo(map);
+
+  var points = [
+    {% for p in points %}
+      [{{ p[2] }}, {{ p[3] }}],
+    {% endfor %}
+  ];
+
+  if (points.length > 0) {
+    var polyline = L.polyline(points, {color: 'blue'}).addTo(map);
+    map.fitBounds(polyline.getBounds());
+    points.forEach(pt => L.marker(pt).addTo(map));
+  }
+</script>
+</body>
+</html>

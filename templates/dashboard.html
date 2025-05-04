@@ -1,0 +1,18 @@
+<!doctype html>
+<html>
+<head><title>Trips</title></head>
+<body>
+<h1>Motorcycle Trips</h1>
+<form action="/trip/new" method="post">
+    <input name="title" placeholder="Trip Title" required>
+    <input name="motorcycle" placeholder="Motorcycle Used" required>
+    <input name="description" placeholder="Description">
+    <button type="submit">Create Trip</button>
+</form>
+<ul>
+{% for trip in trips %}
+    <li><a href="{{ url_for('trip_detail', trip_id=trip[0]) }}">{{ trip[1] }}</a> - {{ trip[2] }}</li>
+{% endfor %}
+</ul>
+</body>
+</html>
